@@ -1,0 +1,38 @@
+name: Mix plugin
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: install dependencies
+        run: |
+          sudo dpkg --add-architecture i386
+          sudo apt-get update
+          sudo apt-get install -y libc6:i386 libstdc++6:i386 wget zip
+
+      - name: compile (.sma -> .amxx)
+        run: |
+          chmod +x tools/amxx/* 2>/dev/null || true
+          make compile
+
+      - name: release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "latest build"
+          tag_name: "latest"
+          prerelease: true
+          files: build/mix.amxx
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
