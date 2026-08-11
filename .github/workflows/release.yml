@@ -19,7 +19,16 @@ jobs:
         run: |
           sudo dpkg --add-architecture i386
           sudo apt-get update
-          sudo apt-get install -y libc6:i386 libstdc++6:i386 wget zip
+          sudo apt-get install -y libc6:i386 libstdc++6:i386
+
+      - name: download AMX Mod X Compiler (1.10)
+        run: |
+          mkdir -p tools/amxx
+          wget https://www.amxmodx.org/amxxdrop/1.10/amxmodx-1.10.0-git5479-base-linux.tar.gz
+          tar -xzf amxmodx-1.10.0-git5479-base-linux.tar.gz
+
+          cp -r addons/amxmodx/scripting/* tools/amxx/
+          chmod +x tools/amxx/amxxpc
 
       - name: compile (.sma -> .amxx)
         run: |
