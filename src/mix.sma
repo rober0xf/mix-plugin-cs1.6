@@ -11,18 +11,8 @@ public plugin_init()
     register_plugin("Rober Mix", "1.0", "rrober");
 
     // mix commands
-    register_clcmd("say /mix", "cmd_mix");
-    register_clcmd("say_team /mix", "cmd_mix");
-
-    // pause commands
-    register_clcmd("say .pause", "cmd_pause");
-    register_clcmd("say /pause", "cmd_pause");
-    register_clcmd("say_team .pause", "cmd_pause");
-    register_clcmd("say_team /pause", "cmd_pause");
-
-    // swap commands. admin only
-    register_clcmd("say .swap", "cmd_swap");
-    register_clcmd("say /swap", "cmd_swap");
+    register_clcmd("say", "cmd_say");
+    register_clcmd("say_team", "cmd_say");
 }
 
 public client_putinserver(id)

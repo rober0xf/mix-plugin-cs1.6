@@ -8,7 +8,8 @@ stock select_players()
     new players[32];
     new count;
 
-    get_players(players, count, "ch");
+    // ch to exclude bots
+    get_players(players, count, "h");
 
     for (new i = 1; i <= MAX_PLAYERS; i++)
     {

@@ -7,10 +7,24 @@
 #include <cstrike>
 #include "mix_vars.inc"
 
+public cmd_swap(id)
+{
+    if (!(get_user_flags(id) & ADMIN_KICK))
+    {
+        client_print(id, print_chat, "[MIX] no tenes permisos")
+        return PLUGIN_HANDLED;
+    }
+
+    swap_teams();
+    return PLUGIN_HANDLED;
+}
+
 stock swap_teams()
 {
     new players[32], count;
-    get_players(players, count, "ch");
+
+    // explude c to enable bots
+    get_players(players, count, "h");
 
     for (new i = 0; i < count; i++)
     {
