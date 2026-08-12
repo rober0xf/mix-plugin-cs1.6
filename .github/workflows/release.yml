@@ -23,17 +23,20 @@ jobs:
 
       - name: download AMX Mod X Compiler (1.10)
         run: |
-          mkdir -p tools/amxx
           wget https://www.amxmodx.org/amxxdrop/1.10/amxmodx-1.10.0-git5479-base-linux.tar.gz
           tar -xzf amxmodx-1.10.0-git5479-base-linux.tar.gz
 
+          mkdir -p tools/amxx
           cp -r addons/amxmodx/scripting/* tools/amxx/
-          chmod +x tools/amxx/amxxpc
 
-      - name: show compiler version
+          chmod +x tools/amxx/amxxpc
+          chmod +x tools/amxx/*.so
+
+      - name: inspect compiler
         run: |
-          ./tools/amxx/amxxpc
-          ./tools/amxx/amxxpc -h || true
+          ls -lah tools/amxx
+          file tools/amxx/amxxpc
+          find tools/amxx -maxdepth 1 -type f -name "*.so" -print
 
       - name: compile (.sma -> .amxx)
         run: |
