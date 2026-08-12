@@ -30,10 +30,21 @@ jobs:
           cp -r addons/amxmodx/scripting/* tools/amxx/
           chmod +x tools/amxx/amxxpc
 
+      - name: show compiler version
+        run: |
+          ./tools/amxx/amxxpc
+          ./tools/amxx/amxxpc -h || true
+
       - name: compile (.sma -> .amxx)
         run: |
           chmod +x tools/amxx/* 2>/dev/null || true
           make compile
+
+      - name: inspect compiled plugin
+        run: |
+          ls -lah build/
+          file build/mix.amxx
+          xxd -l 32 build/mix.amxx
 
       - name: release
         uses: softprops/action-gh-release@v2

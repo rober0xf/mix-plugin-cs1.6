@@ -24,11 +24,11 @@ stock swap_teams()
 
         if (current_team == CS_TEAM_T)
         {
-            cs_set_user_team(id, CS_TEAM_CT)
+            cs_set_user_team(id, CS_TEAM_CT);
         }
         else if (current_team == CS_TEAM_CT)
         {
-            cs_set_user_team(id, CS_TEAM_T)
+            cs_set_user_team(id, CS_TEAM_T);
         }
     }
 
