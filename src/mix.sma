@@ -8,7 +8,7 @@
 
 public plugin_init()
 {
-    register_plugin("Rober Mix", "1.0", "rrober");
+    register_plugin("[Testing] Rober Mix", "13.13", "rrober");
 
     // mix commands
     register_clcmd("say", "cmd_say");

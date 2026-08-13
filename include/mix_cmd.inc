@@ -14,24 +14,34 @@ public cmd_say(id)
     remove_quotes(args);
     trim(args);
 
+    // debug raw arg to console: shows exactly what the server receives
+    server_print("[MIX-debug] player %n raw args='%s'", id, args);
 
-    // /mix
-    if (equali(args, "/mix") == 0)
+    // split command and rest
+    new cmd[33];
+    new rest[16];
+    if (strtok2(args, cmd, charsmax(cmd), rest, charsmax(rest), ' ', TRIM_FULL) == -1)
     {
-        client_print(id, print_chat, "[MIX] uso: /mix <jugadores>");
-        return PLUGIN_HANDLED;
+        copy(cmd, charsmax(cmd), args);
+        rest[0] = 0;
     }
 
-    // /mix x
-    if (containi(args, "/mix ") == 0)
+    // /mix or .mix
+    if (equali(cmd, "/mix") || equali(cmd, ".mix"))
     {
+        if (rest[0] == 0)
+        {
+            client_print(id, print_chat, "[MIX] uso: /mix <jugadores>");
+            return PLUGIN_HANDLED;
+        }
+
         if (!(get_user_flags(id) & ADMIN_KICK))
         {
             client_print(id, print_chat, "[MIX] no tenes permisos");
             return PLUGIN_HANDLED;
         }
 
-        new players = str_to_num(args[5]);
+        new players = str_to_num(rest);
         client_print(id, print_chat, "[debug] args='%s' players=%d", args, players);
 
         if (players < 2 || players > MAX_PLAYERS)
@@ -68,13 +78,13 @@ public cmd_say(id)
     }
 
     // .pause
-    if (equali(args, ".pause") || equali(args, "/pause"))
+    if (equali(cmd, ".pause") || equali(cmd, "/pause"))
     {
         return cmd_pause(id);
     }
 
     // .swap
-    if (equali(args, ".swap") || equali(args, "/swap"))
+    if (equali(cmd, ".swap") || equali(cmd, "/swap"))
     {
         return cmd_swap(id);
     }
