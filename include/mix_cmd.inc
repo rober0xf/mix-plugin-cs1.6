@@ -31,11 +31,8 @@ public cmd_say(id)
             return PLUGIN_HANDLED;
         }
 
-        new value[16]; 
-        copy(value, charsmax(value), args[5]);
-        trim(value);
-
-        new players = str_to_num(value);
+        new players = str_to_num(args[5]);
+        client_print(id, print_chat, "[debug] args='%s' players=%d", args, players);
 
         if (players < 2 || players > MAX_PLAYERS)
         {
