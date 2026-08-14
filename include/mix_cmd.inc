@@ -83,6 +83,12 @@ public cmd_say(id)
         return PLUGIN_HANDLED;
     }
 
+    // end mix
+    if (equali(cmd, ".end") || equali(cmd, "/end"))
+    {
+        return cmd_finish(id);
+    }
+
     // .pause
     if (equali(cmd, ".pause") || equali(cmd, "/pause"))
     {
@@ -96,4 +102,16 @@ public cmd_say(id)
     }
     
     return PLUGIN_CONTINUE;
+}
+
+public cmd_finish(id)
+{
+    if (!(get_user_flags(id) & ADMIN_KICK))
+    {
+        client_print(id, print_chat, "[MIX] NO TENES PERMISOS");
+        return PLUGIN_HANDLED;
+    }
+
+    end_mix();
+    return PLUGIN_HANDLED;
 }
