@@ -4,16 +4,16 @@ My **AMX Mod X** mix plugin for my local server ReHLDS. It allows 2v2, 3v3, ... 
 
 ## Features
 
-- Unlimited respawns during warmup. Type `.ready` to start.
 - Quick knife round to decide starting sides.
 - Handles match starts, half-time team swaps, and score tracking.
 - Simple `.pause` command and round restoration.
 
 ## Main Commands
 
-- `.ready` / `.unready` — Toggle ready state in warmup.
 - `.pause` — Pause during mix.
-- `amx_startmix` — Admin command to force-start the match.
+- `/pause` — Pause during mix.
+- `.mix NvN` — Command to force-start the mix with specified players.
+- `/mix NvN` — Command to force-start the mix with specified players.
 
 ## Install
 

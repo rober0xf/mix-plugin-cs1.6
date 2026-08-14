@@ -14,9 +14,6 @@ public cmd_say(id)
     remove_quotes(args);
     trim(args);
 
-    // debug raw arg to console: shows exactly what the server receives
-    server_print("[MIX-debug] player %n raw args='%s'", id, args);
-
     // split command and rest
     new cmd[33];
     new rest[16];
@@ -31,28 +28,27 @@ public cmd_say(id)
     {
         if (rest[0] == 0)
         {
-            client_print(id, print_chat, "[MIX] uso: /mix <jugadores>");
+            client_print(id, print_chat, "[MIX] USO: /mix <jugadores>");
             return PLUGIN_HANDLED;
         }
 
         if (!(get_user_flags(id) & ADMIN_KICK))
         {
-            client_print(id, print_chat, "[MIX] no tenes permisos");
+            client_print(id, print_chat, "[MIX] NO TENES PERMISOS");
             return PLUGIN_HANDLED;
         }
 
         new players = str_to_num(rest);
-        client_print(id, print_chat, "[debug] args='%s' players=%d", args, players);
 
         if (players < 2 || players > MAX_PLAYERS)
         {
-            client_print(id, print_chat, "[MIX] numero entre 2 y %d.", MAX_PLAYERS);
+            client_print(id, print_chat, "[MIX] NUMERO ENTRE 2 Y %d.", MAX_PLAYERS);
             return PLUGIN_HANDLED;
         }
 
         if (players % 2 != 0)
         {
-            client_print(id, print_chat, "[MIX] debe ser cantidad par de jugadores.");
+            client_print(id, print_chat, "[MIX] DEBE SER CANTIDAD PAR DE JUGADORES.");
             return PLUGIN_HANDLED;
         }
 
@@ -66,13 +62,23 @@ public cmd_say(id)
 
         if (connected < players)
         {
-            client_print(id, print_chat, "[MIX] no hay suficientes jugadores.");
+            client_print(id, print_chat, "[MIX] NO HAY SUFICIENTES JUGADORES.");
             return PLUGIN_HANDLED;
         }
 
         g_mix_players = players;
-        select_players();
-        client_print(0, print_chat, "[MIX] empieza el mix: %d jugadores.", g_mix_players);
+
+        if (!select_players())
+        {
+            client_print(id, print_chat, "[MIX] NO HAY SUFICIENTES JUGADORES EN AMBOS EQUIPOS PARA FORMAR %dv%d.", players / 2, players / 2);
+            return PLUGIN_HANDLED;
+        }
+
+        server_cmd("exec addons/amxmodx/configs/mix.cfg");
+        server_exec();
+        start_mix();
+
+        client_print(0, print_chat, "[ROBER MIX] %dv%d | MIX INICIADO", players / 2, players / 2);
 
         return PLUGIN_HANDLED;
     }

@@ -5,13 +5,21 @@
 
 #include <amxmodx>
 #include <cstrike>
+#include <fun>
+
 #include "mix_vars.inc"
 
 public cmd_swap(id)
 {
     if (!(get_user_flags(id) & ADMIN_KICK))
     {
-        client_print(id, print_chat, "[MIX] no tenes permisos")
+        client_print(id, print_chat, "[MIX] NO TENES PERMISOS")
+        return PLUGIN_HANDLED;
+    }
+
+    if (!g_mix_active)
+    {
+        client_print(id, print_chat, "[MIX] NO HAY UN MIX ACTIVO");
         return PLUGIN_HANDLED;
     }
 
@@ -36,6 +44,13 @@ stock swap_teams()
 
         new CsTeams:current_team = cs_get_user_team(id);
 
+        // remove the weapon
+        strip_user_weapons(id);
+
+        // reset money
+        cs_set_user_money(id, 800);
+
+        // swap
         if (current_team == CS_TEAM_T)
         {
             cs_set_user_team(id, CS_TEAM_CT);
@@ -46,5 +61,8 @@ stock swap_teams()
         }
     }
 
-    client_print(0, print_chat, "[MIX] cambio de lados");
+    client_print(0, print_chat, "[MIX] CAMBIO DE LADOS");
+
+    // restart when half life to start clean
+    server_cmd("sv_restart 1");
 }
