@@ -6,7 +6,7 @@ My **AMX Mod X** mix plugin for my local server ReHLDS. It allows 2v2, 3v3, ... 
 
 - Quick knife round to decide starting sides.
 - Handles match starts, half-time team swaps, and score tracking.
-- Simple `.pause` command and round restoration.
+- Simple `.pause` or `/pause` command and round restoration.
 
 ## Main Commands
 
