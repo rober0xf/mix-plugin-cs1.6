@@ -5,6 +5,8 @@
 
 #include <amxmodx>
 
+#include "mix_vars.inc"
+
 new bool:g_is_paused = false;
 
 public cmd_pause(id)

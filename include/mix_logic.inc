@@ -9,53 +9,25 @@
 #include "mix_vars.inc"
 #include "mix_swap.inc"
 
-stock bool:select_players()
+// move every non-mix player to spectator
+stock lock_spectators()
 {
-    new t_players[32], ct_players[32];
-    new t_count, ct_count;
+    new players[32], count;
+    get_players(players, count, "h");
 
-    get_players(t_players, t_count, "he", "TERRORIST");
-    get_players(ct_players, ct_count, "he", "CT");
-
-    for (new i = 1; i <= MAX_PLAYERS; i++)
+    for (new i = 0; i < count; i++)
     {
-        g_in_mix[i] = false;
-    }
-
-    new players_per_team = g_mix_players / 2;
-
-    if (t_count < players_per_team || ct_count < players_per_team)
-    {
-        return false;
-    }
-
-    // select T players
-    for (new i = 0; i < players_per_team; i++)
-    {
-        g_in_mix[t_players[i]] = true;
-    }
-
-    // select CT players
-    for (new i = 0; i < players_per_team; i++)
-    {
-        g_in_mix[ct_players[i]] = true;
-    }
-
-    // move to spec
-    new all_players[32];
-    new all_count;
-
-    get_players(all_players, all_count, "h");
-    for (new i = 0; i < all_count; i++)
-    {
-        new id = all_players[i];
+        new id = players[i];
         if (!g_in_mix[id])
         {
-            cs_set_user_team(id, CS_TEAM_SPECTATOR);
+            // kill alive players first so they cant stay in the map
+            if (is_user_alive(id))
+                user_kill(id);
+
+            if (cs_get_user_team(id) != CS_TEAM_SPECTATOR)
+                cs_set_user_team(id, CS_TEAM_SPECTATOR);
         }
     }
-
-    return true;
 }
 
 // swap teams
@@ -66,9 +38,6 @@ stock start_mix()
     g_mix_round = 0;
     g_mix_score_a = 0;
     g_mix_score_b = 0;
-
-    // team A starts as tt
-    g_team_a_is_t = true;
 }
 
 stock end_mix()
@@ -81,6 +50,17 @@ stock end_mix()
     g_mix_score_a = 0;
     g_mix_score_b = 0;
     g_team_a_is_t = false;
+
+    // knife / draft state reset
+    g_knife_active = false;
+    g_draft_active = false;
+    remove_task(MIX_LOCK_TASK_ID);
+
+    // drop any pending draft timeout tasks
+    for (new i = 1; i <= MAX_PLAYERS; i++)
+    {
+        remove_task(DRAFT_TIMEOUT_TASK_ID + i);
+    }
 
     for (new i = 1; i <= MAX_PLAYERS; i++)
     {

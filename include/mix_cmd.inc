@@ -6,6 +6,7 @@
 #include "mix_swap.inc"
 #include "mix_pause.inc"
 #include "mix_logic.inc"
+#include "mix_knife.inc"
 
 public cmd_say(id)
 {
@@ -68,17 +69,21 @@ public cmd_say(id)
 
         g_mix_players = players;
 
-        if (!select_players())
+        // already running a mix process
+        if (g_mix_active || g_knife_active || g_draft_active)
         {
-            client_print(id, print_chat, "[MIX] NO HAY SUFICIENTES JUGADORES EN AMBOS EQUIPOS PARA FORMAR %dv%d.", players / 2, players / 2);
+            client_print(id, print_chat, "[MIX] YA HAY UN MIX O PROCESO EN CURSO");
+            return PLUGIN_HANDLED;
+        }
+
+        if (!start_knife())
+        {
+            client_print(id, print_chat, "[MIX] NO HAY SUFICIENTES JUGADORES PARA LA KNIFE 1v1.");
             return PLUGIN_HANDLED;
         }
 
         server_cmd("exec addons/amxmodx/configs/mix.cfg");
         server_exec();
-        start_mix();
-
-        client_print(0, print_chat, "[ROBER MIX] %dv%d | MIX INICIADO", players / 2, players / 2);
 
         return PLUGIN_HANDLED;
     }
